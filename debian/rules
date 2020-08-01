@@ -1,0 +1,52 @@
+#!/usr/bin/make -f
+
+VENDORED ?= 1
+DEBUG ?= 0
+TARGET ?= debug
+BIN = alacritty
+APPID = com.alacritty.Alacritty
+DESTDIR = debian/$(BIN)
+
+ifeq ($(VENDORED),1)
+	ARGS += --frozen
+endif
+
+ifeq ($(DEBUG),0)
+	ARGS += --release
+	TARGET = release
+endif
+
+COMP=completions/alacritty
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+	cargo clean
+ifeq ($(VENDORED),1)
+	if ! ischroot; then \
+		mkdir -p .cargo; \
+		cargo vendor | head -n -1 > .cargo/config; \
+		echo 'directory = "vendor"' >> .cargo/config; \
+		tar pcfJ vendor.tar.xz vendor; \
+		rm -rf vendor; \
+	fi
+endif
+
+override_dh_auto_build:
+ifeq ($(VENDORED),1)
+	tar pxf vendor.tar.xz
+endif
+	cargo build $(ARGS)
+
+override_dh_auto_install:
+	mkdir -p $(DESTDIR)/usr/share/man/man1/
+	help2man "target/$(TARGET)/$(BIN)" | gzip > "$(DESTDIR)/usr/share/man/man1/alacritty.1.gz"
+	install -Dm04755 "target/$(TARGET)/$(BIN)" "$(DESTDIR)/usr/bin/$(BIN)"
+	install -Dm0644 "extra/$(COMP).bash" "$(DESTDIR)/usr/share/bash-completion/$(COMP)"
+	install -Dm0644 "extra/$(COMP).fish" "$(DESTDIR)/usr/share/fish/$(COMP).fish"
+	install -Dm0644 "extra/completions/_alacritty" "$(DESTDIR)/usr/share/zsh/vendor-completions/_alacritty"
+	install -Dm0644 "extra/logo/$(BIN)-term.svg" "$(DESTDIR)/usr/share/pixmaps/$(APPID).svg"
+	install -Dm0644 "extra/linux/Alacritty.desktop" "$(DESTDIR)/usr/share/applications/$(APPID).desktop"
+	sed -i 's/Icon=Alacritty/Icon=$(APPID)/g' "$(DESTDIR)/usr/share/applications/$(APPID).desktop"
+
