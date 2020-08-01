@@ -1,0 +1,29 @@
+Source: alacritty
+Section: rust
+Priority: optional
+Maintainer: Michael Aaron Murphy <michael@system76.com>
+Build-Depends:
+ cargo (>=0.29),
+ cmake,
+ debhelper (>=9),
+ help2man,
+ libfreetype6-dev,
+ libfontconfig1-dev,
+ libxcb1-dev,
+ libxcb-render0-dev,
+ libxcb-shape0-dev,
+ libxcb-xfixes0-dev,
+ libxkbcommon-dev,
+ rustc (>=1.32),
+ python3
+Standards-Version: 4.1.4
+Homepage: https://github.com/jwilm/alacritty
+
+Package: alacritty
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Recommends: xclip
+Description: GPU-accelerated terminal emulator
+ GPU-accelerated terminal emulator, written in Rust
