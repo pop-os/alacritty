@@ -16,7 +16,7 @@ Build-Depends:
  rustc (>=1.32),
  python3
 Standards-Version: 4.1.4
-Homepage: https://github.com/jwilm/alacritty
+Homepage: https://github.com/alacritty/alacritty
 
 Package: alacritty
 Architecture: any
