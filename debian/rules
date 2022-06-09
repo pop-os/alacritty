@@ -42,7 +42,7 @@ endif
 override_dh_auto_install:
 	mkdir -p $(DESTDIR)/usr/share/man/man1/
 	help2man "target/$(TARGET)/$(BIN)" | gzip > "$(DESTDIR)/usr/share/man/man1/alacritty.1.gz"
-	install -Dm04755 "target/$(TARGET)/$(BIN)" "$(DESTDIR)/usr/bin/$(BIN)"
+	install -Dm0755 "target/$(TARGET)/$(BIN)" "$(DESTDIR)/usr/bin/$(BIN)"
 	install -Dm0644 "extra/$(COMP).bash" "$(DESTDIR)/usr/share/bash-completion/$(COMP)"
 	install -Dm0644 "extra/$(COMP).fish" "$(DESTDIR)/usr/share/fish/$(COMP).fish"
 	install -Dm0644 "extra/completions/_alacritty" "$(DESTDIR)/usr/share/zsh/vendor-completions/_alacritty"
